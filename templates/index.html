@@ -1,0 +1,873 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  @keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .gradient-text {
+    font-size: 0.8em;
+    font-weight: bold;
+    background: linear-gradient(
+      270deg,
+      #4dd0e1,
+      #002f4b,
+      #c0c0c0
+    );
+    background-size: 600% 600%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 6s ease infinite;
+    text-align: center;
+    margin: 0;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .title-emoji {
+    font-size: 1.2em;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-size: 0.8em;
+    color: #555;
+    margin-top: 4px;
+    text-align: center;
+  }
+  .cd-date-badge {
+    display: inline-block;
+    background: #ff4d4d;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  .video-title{
+    display:inline-flex;           /* h2 오른쪽에 딱 붙게 */
+    align-items:center;
+    gap:10px;                      /* h2와 배지 사이 간격 */
+    margin-bottom:8px;
+  }
+  
+  .sound-inline{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-weight:700;
+    font-size:0.95rem;             /* h2보다 한 단계 작게 */
+    line-height:1;
+    letter-spacing:.02em;
+    background:linear-gradient(90deg,#ff6a00,#ee0979);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;  /* 텍스트만 그라데이션 */
+  }
+  
+  .sound-inline .emoji{
+    display:inline-block;
+    animation: bop 1.2s ease-in-out infinite;  /* 살짝 고개 끄덕 */
+    transform-origin: 60% 60%;
+  }
+  
+  @keyframes bop{
+    0%,100%{ transform: rotate(0deg) translateY(0) }
+    50%    { transform: rotate(-12deg) translateY(-1px) }
+  }
+  
+  /* 모바일에서 너무 붙어보이면 살짝 줄이기 (옵션) */
+  @media (max-width:480px){
+    .video-title{ gap:8px; }
+    .sound-inline{ font-size:0.9rem; }
+  }
+    
+  .section-hero {
+    padding: 2rem 0.2rem 1rem;  /* 위 3rem, 좌우 1rem, 아래 2rem */
+    text-align: center;
+  }
+
+  .hero-message {
+    max-width: 100%;      /* 화면 전체 너비 */
+    text-align: center;   /* 가운데 정렬 */
+    margin: 0 auto 1.5rem;
+    padding: 0 12px;      /* 좌우 여백 */
+  }
+  
+  .hero-message h1 {
+    font-size: clamp(24px, 6vw, 48px);  /* 반응형 폰트 */
+    line-height: 1.3;
+    margin: 0.2em 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+    flex-wrap: wrap;      /* 모바일에서 줄바꿈 허용 */
+  }
+  
+  .hero-message h1 .emoji {
+    font-size: 1.2em;
+  }
+  
+  .hero-message p {
+    font-size: clamp(14px, 3.5vw, 15px);
+    line-height: 1.6;
+    margin-top: 1rem;
+    color: #444;
+  }
+  .hero-center{ text-align:center; }
+  .hero-row{
+    display:inline-flex;         /* ✅ 가운데 묶어서 한 줄 */
+    align-items:center;
+    justify-content:center;
+    gap:.5em;                   /* 🎉랑 텍스트 간격 */
+    font-size:clamp(26px,6vw,52px);
+    font-weight:900;
+    line-height:1.25;
+  }
+  .hero-text {
+    background: linear-gradient(
+      90deg,
+      #1e3c72,   /* 로열블루 */
+      #2a9df4,   /* 밝은 시안 */
+      #6a0dad    /* 짙은 보라 */
+    );
+    background-size: 250% 250%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-move 8s ease-in-out infinite;
+    font-size: clamp(28px, 7vw, 50px);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    .hero-text {
+      font-size: 28px;  /* 작은 화면에서는 조금 줄이기 */
+    }
+  }
+  @keyframes gradient-move {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .hero-emoji{
+    font-size:1.2em;
+    line-height:1;
+    transform:translateY(0.05em);
+  }
+</style>
+
+<section class="section-hero">
+  <div class="hero-center">
+    <div class="hero-row">
+      <span class="hero-emoji">🎉</span>
+      <span class="hero-text">
+        ??의 생일을<br>진심으로 축하합니다!
+      </span>
+      <span class="hero-emoji">🎉</span>
+    </div>
+  </div>
+  <div class="hero-message">
+    <p>
+      <br>
+      2026년 8월 24일, ??의 ?번째 생일이에요.<br>
+      나라를 열심히 지키고 있는 ??를 위해<br>
+      아래 방명록에 따뜻한 마음을 남겨주세요💖
+    </p>
+  </div>
+</section>
+
+<!-- === Big Countdown === -->
+<section class="section" id="countdown">
+  <style>
+    .cd-wrap{
+      max-width: 980px;margin:1px auto 0.1px auto;padding:16px 14px;
+      border:1px solid var(--panel-border);border-radius:18px;background:var(--panel);box-shadow:var(--shadow);
+    }
+    .cd-title{
+      text-align:center;font-weight:800;letter-spacing:.2px;margin:0 0 10px 0;
+      background:linear-gradient(90deg,#4dd0e1,#7c4dff);-webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .cd-grid{ display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch; }
+    @media (max-width:640px){ .cd-grid{grid-template-columns:repeat(2,1fr);} }
+    .cd-card{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--panel-border);position:relative;overflow:hidden;
+    }
+    .cd-label{font-size:.78rem;color:var(--muted);letter-spacing:.08em}
+    .cd-digit{
+      font-variant-numeric: tabular-nums;
+      font-weight:900;line-height:1;letter-spacing:.5px;
+      font-size: clamp(28px, 7.6vw, 64px);
+      position:relative;display:inline-block;perspective:700px;
+    }
+    .flip{ animation: flip .6s cubic-bezier(.2,.6,.2,1); }
+    @keyframes flip{ 0%{transform: rotateX(0)} 50%{transform: rotateX(-75deg)} 100%{transform: rotateX(0)} }
+    .cd-ticker{ height:4px;border-radius:999px;background:rgba(255,255,255,.12);margin-top:12px;overflow:hidden; }
+    .cd-ticker > span{ display:block;height:100%;width:0%; background:linear-gradient(90deg,#ff4d8d,#7c4dff); transition:width .12s linear; }
+    .cd-badge{ font-weight:800;font-size:.78rem;padding:4px 8px;border-radius:999px; background:linear-gradient(90deg,#ff9a9e,#fad0c4);color:#1a1a1a;mix-blend:screen; }
+    #countdown {
+      padding-bottom: 0.6rem;   /* 섹션 하단 여백 ↓ */
+      margin-bottom: 0;         /* 혹시 남아있을 margin 제거 */
+    }
+    #countdown-discharge {
+      padding-top: 0.6rem;      /* 섹션 상단 여백 ↓ */
+      margin-top: 0;            /* 혹시 남아있을 margin 제거 */
+    }
+    
+    /* 내부 카드 래퍼도 살짝만 붙이기 */
+    #countdown .cd-wrap,
+    #countdown-discharge .cd-wrap {
+      margin-bottom: 0.4rem;    /* 기존 0.1px 등 혼재 → 균일하게 */
+    }
+  </style>
+
+  <div class="cd-wrap">
+    <h3 class="cd-title">🥳 생일까지 남은 시간
+    </h3>
+    <div class="cd-grid" id="cd-grid">
+      <div class="cd-card"><div class="cd-digit" id="cd-days">00</div><div class="cd-label">Days</div></div>
+      <div class="cd-card"><div class="cd-digit" id="cd-hours">00</div><div class="cd-label">Hours</div></div>
+      <div class="cd-card"><div class="cd-digit" id="cd-mins">00</div><div class="cd-label">Minutes</div></div>
+      <div class="cd-card"><div class="cd-digit" id="cd-secs">00</div><div class="cd-label">Seconds</div></div>
+    </div>
+  
+    <div id="dday-big" style="display:none; text-align:center; padding:40px 0;">
+      <span style="font-size: clamp(36px, 10vw, 80px); font-weight:900; 
+                   background:linear-gradient(90deg,#ff4d8d,#7c4dff);
+                   -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+        D-Day
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- === 전역일 카운트다운: Years / Months / Days === -->
+<section class="section" id="countdown-discharge">
+  <div class="cd-wrap" style="position: relative;">
+    <h3 class="cd-title">🎖 전역까지 남은 시간</h3>
+
+    <div class="cd-grid" style="grid-template-columns:repeat(3,1fr); max-width:520px; margin:auto;">
+      <div class="cd-card"><div class="cd-digit" id="cd-years-discharge">00</div><div class="cd-label">Years</div></div>
+      <div class="cd-card"><div class="cd-digit" id="cd-months-discharge">00</div><div class="cd-label">Months</div></div>
+      <div class="cd-card"><div class="cd-digit" id="cd-days-discharge">00</div><div class="cd-label">Days</div></div>
+    </div>
+
+    <div class="cd-ticker" style="position: relative; height: 8px; background: #eee; border-radius: 4px; margin-top: 12px;">
+      <span id="cd-tick-discharge"
+            style="display: block; height: 100%; background: linear-gradient(90deg,#ff7f50,#ff1493); border-radius: 4px 0 0 4px;"></span>
+    </div>
+
+    <div class="cd-badge" style="position:absolute; left:12px; bottom:5px; font-size:0.8rem; white-space:nowrap;">2025.07.07</div>
+    <div class="cd-badge" style="position:absolute; right:12px; bottom:5px; font-size:0.8rem; white-space:nowrap;">2027.01.06</div>
+    <span><br> </span>
+  </div>
+</section>
+
+<!-- 1) 유튜브 -->
+<section class="section" id="video">
+  <h2 class="video-title">
+    🎥 Special Guest
+    <span class="sound-inline" aria-label="Sound On!">
+      <span class="emoji">🔊</span>
+    </span>
+  </h2>
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid #eee;">
+    <iframe
+      src="https://www.youtube.com/embed/{{ youtube_id }}?cc_load_policy=1&hl=ko&cc_lang_pref=ko"
+      title="YouTube"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+      style="position:absolute; top:0; left:0; width:100%; height:100%;">
+    </iframe>
+</section>
+
+<!-- 2) 생일 메시지 -->
+<section class="section" id="owner-message">
+  <h2>💌 ??의 메시지</h2>
+
+  {% if birthday_note and birthday_note.content %}
+    <div class="card" id="owner-note-view" data-raw="{{ birthday_note.content | trim | e }}" style="margin-bottom:12px;">
+      <div style="white-space:pre-wrap;line-height:1.6;font-size:1.05rem;">
+        {{- birthday_note.content | trim -}}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if g.is_birthday %}
+    {% set empty_note = not (birthday_note and birthday_note.content) %}
+    <div id="owner-note-actions" style="margin-bottom:8px; text-align:center; {{ 'display:none;' if empty_note else '' }}">
+      <button class="btn" type="button" onclick="openOwnerEdit()">편집</button>
+    </div>
+
+    <form id="owner-note-form" action="{{ url_for('edit_birthday_note') }}" method="post"
+          style="{{ 'display:block;' if empty_note else 'display:none;' }}">
+      {{ csrf_token() if csrf_token is defined }}
+      <textarea id="owner-note-textarea" name="content" rows="10" placeholder="메시지를 입력하세요"
+                style="width:100%;border:1px solid #ddd;border-radius:12px;font-size:1rem;line-height:1.6;">{{ (birthday_note.content if birthday_note and birthday_note.content else '') | trim }}</textarea>
+
+      <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;">
+        <button class="btn" type="submit">저장</button>
+        <button class="btn btn-ghost" type="button" onclick="cancelOwnerEdit()">취소</button>
+      </div>
+    </form>
+  {% endif %}
+</section>
+
+<script>
+  function openOwnerEdit () {
+    const view    = document.getElementById('owner-note-view');
+    const actions = document.getElementById('owner-note-actions');
+    const form    = document.getElementById('owner-note-form');
+    const ta      = document.getElementById('owner-note-textarea');
+
+    if (view && view.dataset && typeof view.dataset.raw === 'string') {
+      ta.value = view.dataset.raw;
+    }
+    if (view)    view.style.display = 'none';
+    if (actions) actions.style.display = 'none';
+    if (form)    form.style.display = 'block';
+  }
+
+  function cancelOwnerEdit () {
+    const view    = document.getElementById('owner-note-view');
+    const actions = document.getElementById('owner-note-actions');
+    const form    = document.getElementById('owner-note-form');
+
+    if (form)    form.style.display = 'none';
+    if (view)    view.style.display = 'block';
+    if (actions) actions.style.display = 'block';
+  }
+</script>
+
+<!-- 3) 사진 -->
+<section class="section" id="photos">
+  <h2>🪖 ??의 근황</h2>
+
+  {% if photos and photos|length > 0 %}
+    <div class="card photo-card" style="padding:0;overflow:hidden;border-radius:12px;">
+      <div class="swiper photo-swiper-main" style="width:100%;position:relative;">
+        <div class="swiper-wrapper">
+          {% for p in photos %}
+          <div class="swiper-slide" style="display:flex;align-items:center;justify-content:center;">
+            <div class="photo-frame"
+                 style="width:100%;height:55vh;max-height:420px;min-height:220px;margin:0 auto;position:relative;overflow:hidden;border-radius:12px;background:rgba(0,0,0,.06);">
+              <img class="photo-img"
+                   src="{{ p.url }}" alt="{{ p.name }}"
+                   style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;">
+              {% if g.is_birthday %}
+              <form action="{{ url_for('delete_photo', filename=p.name) }}"
+                    method="post" style="position:absolute; right:10px; bottom:10px; margin:0;">
+                {{ csrf_token() if csrf_token is defined }}
+                <button class="btn btn-ghost" style="backdrop-filter: blur(6px);" onclick="return confirm('이 사진을 삭제할까요?')">삭제</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-button-prev" style="top:50%;transform:translateY(-50%);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.35);"></div>
+        <div class="swiper-button-next" style="top:50%;transform:translateY(-50%);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.35);"></div>
+        <div class="swiper-pagination" style="bottom:8px;"></div>
+      </div>
+    </div>
+  {% else %}
+    <p class="muted">아직 업로드된 사진이 없어요.</p>
+  {% endif %}
+
+  {% if g.is_birthday %}
+  <div class="card" style="margin-bottom:12px;">
+    <form action="{{ url_for('upload_photo') }}" method="post" enctype="multipart/form-data"
+          style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+      <input type="file" name="file" accept="image/*" required style="flex:1;">
+      <button class="btn">업로드</button>
+    </form>
+    <form action="{{ url_for('reset_photos') }}" method="post"
+          style="margin-top:8px;"
+          onsubmit="return confirm('편집본을 초기 상태로 되돌릴까요?');">
+      <button class="btn btn-ghost">초기화(원본으로 복구)</button>
+    </form>
+  </div>
+  {% endif %}
+</section>
+
+
+<!-- 4) 방명록 -->
+<section class="section" id="guestbook">
+  <style>
+    /* 방명록 액션 줄: 위쪽 여백 살짝, 좌측 시각 정렬 보정 */
+    [id^="gb-actions-"]{
+      margin-top:20px;                  /* 요청: 위쪽 살짝 여백 */
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    
+    /* 하트 버튼: 좌측 패딩 줄이고, 하트를 살짝 바깥으로 끌어내 시각적 좌측선 맞춤 */
+    .heart-btn{
+      padding:4px 10px 4px 8px;         /* 왼쪽 패딩 ↓ */
+      border:1px solid #ddd;
+      background:#f9f9f9;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:15px; font-weight:600;
+      color:#888;
+      opacity: 0.4;
+      display:inline-flex; align-items:center; gap:6px;
+      box-sizing:border-box;
+      transition:background .15s ease, border-color .15s ease, transform .1s ease;
+    }
+    
+    /* 하트 아이콘만 살짝 왼쪽으로 당겨서(2px) 텍스트 본문 시작선과 맞춤 */
+    .heart-btn .heart-emoji{
+      font-size:17px; line-height:1;
+      transform:translate(-2px, 1px);   /* ← 여기! 좌측 -2px로 당김 */
+    }
+    
+    /* 눌렀을 때(ON)도 동일 정렬 유지 + 색만 강조 */
+    .heart-btn.on{
+      color:#e53935;
+      border-color:#e53935;
+      background:#fff;
+      opacity: 1;
+    }
+    
+    /* 카운트 숫자는 탭숫자 간격 */
+    .heart-btn .heart-count{
+      font-variant-numeric: tabular-nums;
+      font-weight:700;
+    }
+  </style>
+
+  <h2>📝 방명록</h2>
+
+  <!-- 작성 폼 -->
+  <div class="card" style="margin-bottom:14px;">
+    <h3 style="margin-top:4px">축하메시지 남기기</h3>
+    <form action="{{ url_for('add_anon_message') }}" method="post" enctype="multipart/form-data" class="anon-form" id="gb-add-form">
+      {{ csrf_token() if csrf_token is defined }}
+      <input type="text" name="nickname" placeholder="이름 (Optional)" class="form-input">
+      <textarea name="text" placeholder="메시지를 적어주세요!" required class="form-textarea"></textarea>
+      <input type="password" name="pin" inputmode="numeric" pattern="\d{4}" maxlength="4" required
+             placeholder="비밀번호 (숫자 4자리, 수정/삭제에 필요)" class="form-input">
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px; justify-content: center;">
+        <button class="btn">등록</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- 목록 -->
+  {% if anon_messages and anon_messages|length > 0 %}
+    <div class="grid" id="gb-list">
+      {% for m in anon_messages %}
+        {% set liked = (session_liked and (m.id in session_liked)) %}
+        <div class="card" id="gb-card-{{ m.id }}">
+          <div style="display:flex;gap:8px;align-items:center">
+            {% if m.image_url %}
+              <img src="{{ m.image_url }}" alt="msg-img" style="width:72px;height:72px;object-fit:cover;border-radius:8px">
+            {% endif %}
+            <div>
+              <strong>{{ m.nickname or '익명' }}</strong>
+              <div class="muted">{{ m.created_at.strftime("%Y-%m-%d %H:%M") if m.created_at }}</div>
+            </div>
+          </div>
+
+          <!-- 보기 모드 -->
+          <div id="gb-view-{{ m.id }}" style="white-space:pre-wrap;margin-top:8px">{{ m.text }}</div>
+
+          <!-- 수정 모드 -->
+          <form id="gb-form-{{ m.id }}" action="{{ url_for('edit_anon_message_update', message_id=m.id) }}" method="post"
+                style="display:none; margin-top:8px;">
+            {{ csrf_token() if csrf_token is defined }}
+            <textarea name="text" class="form-textarea" style="width:100%;">{{ m.text }}</textarea>
+            <input type="hidden" name="pin" value="">
+            <div style="margin-top:6px; display:flex; gap:8px; justify-content:right;">
+              <button type="submit" class="btn">저장</button>
+              <button type="button" class="btn btn-ghost" onclick="cancelEdit({{ m.id }})">취소</button>
+              <button type="button" class="btn btn-ghost" onclick="doDelete({{ m.id }})">삭제</button>
+            </div>
+          </form>
+
+          <!-- 하트(왼쪽) + 수정/삭제(오른쪽) 한 줄 -->
+          <div id="gb-actions-{{ m.id }}" style="margin-top:14px; display:flex; align-items:center; justify-content:space-between;">
+            <!-- 왼쪽: 좋아요 -->
+            <div class="gb-likes">
+              <button
+                class="heart-btn {{ 'on' if liked else '' }}"
+                type="button"
+                aria-pressed="{{ 'true' if liked else 'false' }}"
+                aria-label="좋아요"
+                data-id="{{ m.id }}"
+                onclick="toggleLike({{ m.id }}, this)">
+                <span class="heart-emoji" aria-hidden="true">♥</span>
+                <span class="heart-count" id="heart-{{ m.id }}">{{ m.like_count or 0 }}</span>
+              </button>
+            </div>
+
+            <!-- 오른쪽: 수정/삭제 -->
+            <div style="display:flex; gap:8px;">
+              {% if g.is_birthday %}
+                <form action="{{ url_for('delete_anon_message', message_id=m.id) }}" method="post">
+                  {{ csrf_token() if csrf_token is defined }}
+                  <button class="btn btn-ghost" onclick="return confirm('삭제하시겠어요?')">삭제</button>
+                </form>
+              {% else %}
+                <button class="btn btn-ghost" onclick="startEdit({{ m.id }})">수정</button>
+                <button class="btn btn-ghost" onclick="doDelete({{ m.id }})">삭제</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>  <!-- /card -->
+      {% endfor %}
+    </div>  <!-- /grid -->
+  {% else %}
+    <p class="muted">첫 메시지를 남겨주세요 🎈</p>
+  {% endif %}
+</section>
+
+<script>
+  // 하트 토글 (좋아요/취소) — 연타 방지 + 실패 롤백
+  async function toggleLike(id, btn){
+    if (!btn || btn.dataset.loading === '1') return;
+    btn.dataset.loading = '1';
+
+    const countEl = document.getElementById('heart-'+id);
+    const liked = btn.classList.contains('on');
+    const url = liked ? `/messages/${id}/unlike` : `/messages/${id}/like`;
+
+    // 낙관적 UI 업데이트
+    const oldCount = parseInt((countEl?.textContent || '0').replace(/\D/g,''), 10) || 0;
+    if (countEl) countEl.textContent = liked ? Math.max(0, oldCount - 1) : (oldCount + 1);
+    btn.classList.toggle('on', !liked);
+    btn.setAttribute('aria-pressed', (!liked).toString());
+
+    try{
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{
+          'Accept':'application/json',
+          'Content-Type':'application/json',
+          'X-CSRFToken': (window.CSRF || '')   // CSRF 쓰면 서버에서 읽도록
+        },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      if (!data.ok){
+        // 서버 에러 → 롤백
+        if (countEl) countEl.textContent = String(oldCount);
+        btn.classList.toggle('on', liked);
+        btn.setAttribute('aria-pressed', liked.toString());
+        if (window.showToast) showToast(data.message || '오류가 발생했어요.', 'error');
+      } else {
+        if (countEl && typeof data.count === 'number'){
+          countEl.textContent = String(data.count);
+        }
+      }
+    }catch(e){
+      // 네트워크 에러 → 롤백
+      if (countEl) countEl.textContent = String(oldCount);
+      btn.classList.toggle('on', liked);
+      btn.setAttribute('aria-pressed', liked.toString());
+      if (window.showToast) showToast('네트워크 오류', 'error');
+    }finally{
+      btn.dataset.loading = '';
+    }
+  }
+</script>
+{% endblock %}
+
+{% block body_extra %}
+<script>
+  // 작성 폼: PIN 4자리 강제
+  (function(){
+    const form = document.getElementById('gb-add-form');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
+      const pin = (form.elements.pin?.value || '').trim();
+      if (!/^\d{4}$/.test(pin)){
+        e.preventDefault();
+        if (window.showToast) showToast('비밀번호는 숫자 4자리여야 합니다.', 'error');
+        else alert('비밀번호는 숫자 4자리여야 합니다.');
+        form.elements.pin.focus();
+      }
+    });
+  })();
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    const el = document.querySelector('.photo-swiper-main');
+    if (!el) return;
+    new Swiper('.photo-swiper-main', {
+      slidesPerView: 1, spaceBetween: 10, loop: true, preloadImages: true, autoHeight: false,
+      pagination: { el: '.photo-swiper-main .swiper-pagination', clickable: true },
+      navigation: { nextEl: '.photo-swiper-main .swiper-button-next', prevEl: '.photo-swiper-main .swiper-button-prev' },
+      keyboard: { enabled: true }
+    });
+  });
+
+   // === 카운트다운 (생일) ===
+   (function(){
+    // 🎯 D-Day 범위: 2025-08-24 00:00 ~ 2025-08-25 00:00 (KST)
+    const targetStart = new Date('2026-08-24T00:00:00+09:00').getTime();
+    const targetEnd   = new Date('2026-08-25T00:00:00+09:00').getTime();
+
+    // 엘리먼트 가져오기 + 없으면 D-Day 표시용을 생성
+    const grid = document.getElementById('cd-grid');
+    let big = document.getElementById('dday-big');
+    if (!big) {
+      big = document.createElement('div');
+      big.id = 'dday-big';
+      big.style.cssText = 'display:none; text-align:center; padding:40px 0;';
+      big.innerHTML =
+        '<span style="font-size:clamp(36px,10vw,80px);font-weight:900;' +
+        'background:linear-gradient(90deg,#ff4d8d,#7c4dff);' +
+        '-webkit-background-clip:text;-webkit-text-fill-color:transparent;">' +
+        '🎉 D-Day 🎉</span>';
+      // cd-grid 바로 앞에 붙이기
+      const wrap = grid && grid.parentElement ? grid.parentElement : document.querySelector('#countdown .cd-wrap');
+      (wrap || document.body).insertBefore(big, grid || null);
+    }
+  
+    const els = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs'),
+      tick: document.getElementById('cd-tick')
+    };
+    const pad = n => String(n).padStart(2,'0');
+    function setFlip(e,v){
+      if(!e) return; v=String(v);
+      if(e.textContent===v) return;
+      e.textContent=v; e.classList.remove('flip'); void e.offsetWidth; e.classList.add('flip');
+    }
+  
+    let lastSec = null;
+    let prevNow = Date.now();
+  
+    setInterval(()=>{
+      const now = Date.now();
+  
+    // ✅ 1) 0시 경계 통과 감지: (직전엔 전날, 지금은 D-Day 이상)
+    if (prevNow < targetStart && now >= targetStart) {
+      if (window.fireConfettiDDayOncePerTab) window.fireConfettiDDayOncePerTab('2025-08-24');
+    }
+    prevNow = now;
+
+    // ✅ 2) D-Day 시간대에 진입/체류 중이면, 화면 전환 + (처음 진입 시 자동 발사 1회 보장)
+    if (now >= targetStart && now < targetEnd) {
+      if (grid) grid.style.display = 'none';
+      if (big)  big.style.display  = 'block';
+
+      // D-Day 당일 첫 진입(혹은 새로고침 없이 체류 중 첫 tick)에도 발사 1회 보장
+      if (window.fireConfettiDDayOncePerTab) window.fireConfettiDDayOncePerTab('2026-08-24');
+      return;
+    }
+  
+      // ⏱ D-Day 전에는 일반 카운트다운 노출
+      if (grid) grid.style.display = 'grid';
+      if (big)  big.style.display  = 'none';
+  
+      // 남은 시간 계산(타깃: 8/24 00:00)
+      let diff = targetStart - now;
+      if (els.tick){
+        const msInSec=1000;
+        els.tick.style.width = ((now % msInSec)/msInSec*100).toFixed(1)+'%';
+      }
+      if (diff < 0) diff = 0; // D-Day 지났으면 0에서 멈추게(시간이 거꾸로 커지지 않도록)
+  
+      const days  = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins  = Math.floor((diff % 3600000) / 60000);
+      const secs  = Math.floor((diff % 60000) / 1000);
+  
+      if (secs !== lastSec){
+        lastSec = secs;
+        setFlip(els.d, days);
+        setFlip(els.h, pad(hours));
+        setFlip(els.m, pad(mins));
+        setFlip(els.s, pad(secs));
+      }
+    }, 200);
+  })();
+
+  // === 전역 카운트다운 (Y/M/D) ===
+  (function(){
+    const START_STR = '2025-07-07T00:00:00+09:00';
+    const TARGET_STR = '2027-01-06T00:00:00+09:00';
+    const start = new Date(START_STR);
+    const target = new Date(TARGET_STR);
+    const els = {
+      y: document.getElementById('cd-years-discharge'),
+      m: document.getElementById('cd-months-discharge'),
+      d: document.getElementById('cd-days-discharge'),
+      tick: document.getElementById('cd-tick-discharge')
+    };
+    function nowKST(){ return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'})); }
+    function setFlip(e,v){ if(!e) return; v=String(v); if(e.textContent===v) return; e.textContent=v; e.classList.remove('flip'); void e.offsetWidth; e.classList.add('flip'); }
+    function diffYMD(from,to){
+      let y = to.getFullYear() - from.getFullYear();
+      let m = to.getMonth() - from.getMonth();
+      let d = to.getDate() - from.getDate();
+      if (d < 0){ const prev = new Date(to.getFullYear(), to.getMonth(), 0); d += prev.getDate(); m -= 1; }
+      if (m < 0){ m += 12; y -= 1; }
+      return {y,m,d};
+    }
+    function updateBar(now){
+      const total = target - start;
+      const elapsed = Math.min(Math.max(now - start, 0), total);
+      if (els.tick) els.tick.style.width = (elapsed/total*100).toFixed(3)+'%';
+    }
+    let last = {y:null,m:null,d:null};
+    setInterval(()=>{
+      const now = nowKST(); const clamp = now < start ? start : (now > target ? target : now);
+      updateBar(now);
+      const ymd = now >= target ? {y:0,m:0,d:0} : diffYMD(clamp, target);
+      if (ymd.y!==last.y){ last.y=ymd.y; setFlip(els.y, ymd.y); }
+      if (ymd.m!==last.m){ last.m=ymd.m; setFlip(els.m, ymd.m); }
+      if (ymd.d!==last.d){ last.d=ymd.d; setFlip(els.d, ymd.d); }
+    }, 500);
+  })();
+
+  // === 방명록: 수정/삭제 ===
+  async function startEdit(id){
+    {% if not g.is_birthday %}
+      const pin = await askPinModal();
+      if (!pin) return;
+      if (!/^\d{4}$/.test(pin)){ showToast('숫자 4자리를 입력하세요.','error'); return; }
+      try{
+        const res = await fetch(`{{ url_for('verify_message_pin', message_id=0) }}`.replace('0', id), {
+          method:'POST',
+          headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRFToken':(window.CSRF||'')},
+          body: JSON.stringify({ pin })
+        });
+        const data = await res.json();
+        if (!data.ok){ showToast(data.message || '비밀번호가 일치하지 않습니다.','error'); return; }
+        const form = document.getElementById('gb-form-'+id);
+        const actions = document.getElementById('gb-actions-'+id);
+        const view = document.getElementById('gb-view-'+id);
+        if (!form||!actions||!view) return;
+        form.querySelector('input[name="pin"]').value = pin;
+        form.style.display='block'; actions.style.display='none'; view.style.display='none';
+      }catch(_){ showToast('네트워크 오류','error'); }
+    {% else %}
+      const form = document.getElementById('gb-form-'+id);
+      const actions = document.getElementById('gb-actions-'+id);
+      const view = document.getElementById('gb-view-'+id);
+      if (!form||!actions||!view) return;
+      form.style.display='block'; actions.style.display='none'; view.style.display='none';
+    {% endif %}
+  }
+
+  function cancelEdit(id){
+    const form = document.getElementById('gb-form-'+id);
+    const actions = document.getElementById('gb-actions-'+id);
+    const view = document.getElementById('gb-view-'+id);
+    if (!form||!actions||!view) return;
+    form.style.display='none'; actions.style.display='flex'; view.style.display='block';
+  }
+
+  async function doDelete(id){
+    {% if not g.is_birthday %}
+      const pin = await askPinModal();
+      if (!pin) return;
+      if (!/^\d{4}$/.test(pin)){ showToast('숫자 4자리를 입력하세요.','error'); return; }
+    {% endif %}
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `{{ url_for('delete_anon_message', message_id=0) }}`.replace('0', id);
+
+    {% if csrf_token is defined %}
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden'; csrf.name = 'csrf_token'; csrf.value = '{{ csrf_token() }}';
+    form.appendChild(csrf);
+    {% endif %}
+
+    {% if not g.is_birthday %}
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = 'pin'; input.value = pin;
+    form.appendChild(input);
+    {% endif %}
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+
+<script>
+  /* 콘페티: 탭(세션) 1회 + D-Day(날짜) 1회. 새로고침해도 재발사 X */
+  (function () {
+    const LIB_ID = 'confetti-lib';
+    const LIB_URL = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+    let inFlight = false;
+  
+    function ensureLibLoaded(cb){
+      if (typeof window.confetti === 'function') return cb();
+      if (document.getElementById(LIB_ID)) return setTimeout(()=>ensureLibLoaded(cb), 120);
+      const s = document.createElement('script');
+      s.id = LIB_ID; s.src = LIB_URL; s.async = true;
+      s.onload = () => cb();
+      document.head.appendChild(s);
+    }
+  
+    function burst(){
+      if (typeof window.confetti !== 'function') return false;
+      window.confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+      setTimeout(() => {
+        window.confetti({ particleCount: 80, angle: 60,  spread: 55, origin: { x: 0 } });
+        window.confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
+      }, 300);
+      setTimeout(() => {
+        window.confetti({ particleCount: 100, spread: 100, origin: { y: 0.2 } });
+      }, 800);
+      return true;
+    }
+  
+    // ✅ 일반: 탭(세션) 당 1회
+    window.fireConfettiOncePerTab = function(){
+      const KEY = 'confetti:session-fired';
+      if (inFlight) return;
+      try { if (sessionStorage.getItem(KEY)) return; } catch (_){}
+      inFlight = true;
+      ensureLibLoaded(() => {
+        if (burst()) { try { sessionStorage.setItem(KEY, '1'); } catch (_){ } }
+        else { setTimeout(window.fireConfettiOncePerTab, 250); }
+        inFlight = false;
+      });
+    };
+  
+    // ✅ D-Day: 해당 날짜에 탭(세션) 당 1회 (일반발사와 별개로 쏠 수 있게 분리)
+    window.fireConfettiDDayOncePerTab = function(dateKey /* '2026-08-24' */){
+      const KEY = `confetti:dday-fired:${dateKey}`;
+      if (inFlight) return;
+      try { if (sessionStorage.getItem(KEY)) return; } catch (_){}
+      inFlight = true;
+      ensureLibLoaded(() => {
+        if (burst()) { try { sessionStorage.setItem(KEY, '1'); } catch (_){ } }
+        else { setTimeout(()=>window.fireConfettiDDayOncePerTab(dateKey), 250); }
+        inFlight = false;
+      });
+    };
+  })();
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.fireConfettiOncePerTab) window.fireConfettiOncePerTab();
+    });
+  </script>
+{% endblock %}

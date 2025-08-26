@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Letter from developer{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h2 style = "margin-bottom: 20px;">💌 Letter from developer</h2>
+
+  <div class="card" style="max-width:720px; margin:0 auto;">
+    <h3 style="margin-top:0; text-align: center">??에게, bettyshin1213이</h3>
+    <!-- Letter 전용 사진 슬라이더 -->
+  {% if photos and photos|length > 0 %}
+    <div class="card photo-card" style="padding:0; overflow:hidden; border-radius:12px;">
+      <div class="swiper letter-swiper" style="width:100%; position:relative;">
+        <div class="swiper-wrapper">
+          {% for p in photos %}
+          <div class="swiper-slide" style="display:flex; align-items:center; justify-content:center;">
+            <div class="photo-frame"
+                 style="width:100%; height:55vh; max-height:420px; min-height:220px; margin:0 auto; position:relative; overflow:hidden; border-radius:12px; background:rgba(0,0,0,.06);">
+              <img class="photo-img"
+                   src="{{ p.url }}" alt="{{ p.name }}"
+                   style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; display:block;">
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-button-prev" style="top:50%; transform:translateY(-50%); color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.35);"></div>
+        <div class="swiper-button-next" style="top:50%; transform:translateY(-50%); color:#fff; text-shadow:0 2px 10px rgba(0,0,0,.35);"></div>
+        <div class="swiper-pagination" style="bottom:8px;"></div>
+      </div>
+    </div>
+  {% else %}
+    <p class="muted">아직 편지 사진이 없어요.</p>
+  {% endif %}
+
+    <div style="white-space:pre-wrap; line-height:1.6; text-align: center">
+생일 축하해 🥳
+    </div>
+  </div>
+</section>
+{% block body_extra %}
+<!-- 하트: confetti 시도 + CSS 폴백 -->
+<script>
+(function(){
+  let fired = false;
+
+  function runConfettiHearts(){
+    if (typeof confetti !== 'function') return false;
+    fired = true;
+
+    // 간단 하트 path → 벡터 파티클
+    let heartShape;
+    try {
+      const HEART_PATH = "M24 42c-7-4-12-9-12-16 0-5 4-9 9-9 3 0 5 1 7 3 2-2 4-3 7-3 5 0 9 4 9 9 0 7-5 12-12 16z";
+      heartShape = confetti.shapeFromPath({ path: HEART_PATH });
+    } catch(e){
+      heartShape = 'circle';
+    }
+
+    // 위에서 하늘하늘 내려오는 느낌
+    const duration = 24000;
+    const end = Date.now() + duration;
+    (function frame(){
+      confetti({
+        particleCount: 1,
+        angle: 90,                // 위→아래
+        spread: 100,
+        startVelocity: 20,
+        ticks: 700,
+        gravity: 0.4,
+        drift: (Math.random()-0.5)*0.8,
+        scalar: 1.6,
+        origin: { x: Math.random(), y: -0.01 }, // 살짝 화면 위에서 발생
+        shapes: [heartShape],
+        colors: ['#ff4d4d','#ff8080','#ff1a1a']
+      });
+      if (Date.now() < end) {
+        setTimeout(frame, 180); // 0.12초마다 발사 → 밀도 확 줄어듦
+      }
+    })();
+    return true;
+  }
+
+  function runCssFallback(){
+    if (fired) return;
+    // 컨테이너
+    const wrap = document.createElement('div');
+    wrap.id = 'heart-rain';
+    document.body.appendChild(wrap);
+
+    // 하트 여러 개 생성
+    const HEARTS = 28;  // 개수 (원하면 조절)
+    for (let i=0;i<HEARTS;i++){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = '❤️';
+      // 랜덤 위치/크기/지연/속도/흔들림
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.fontSize = (Math.random()*12 + 14) + 'px';
+      h.style.animationDelay = (Math.random()*0.8) + 's';
+      h.style.animationDuration = (Math.random()*2 + 2.8) + 's';
+      h.style.setProperty('--drift', (Math.random()*40 - 20) + 'px');
+      wrap.appendChild(h);
+    }
+  }
+
+  // 1) confetti 있으면 바로 실행
+  if (typeof confetti === 'function') {
+    runConfettiHearts();
+  } else {
+    // 2) 없으면 로드 시도
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js';
+    s.onload = () => {
+      // 로드됐으면 confetti 실행
+      if (!runConfettiHearts()) runCssFallback();
+    };
+    s.onerror = runCssFallback;
+    document.head.appendChild(s);
+    // 1초 안에 onload가 안 오면 폴백
+    setTimeout(runCssFallback, 1000);
+  }
+})();
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof Swiper !== 'undefined') {
+      new Swiper('.letter-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        loop: true,
+        preloadImages: true,
+        autoHeight: false,
+        pagination: { el: '.letter-swiper .swiper-pagination', clickable: true },
+        navigation: { nextEl: '.letter-swiper .swiper-button-next', prevEl: '.letter-swiper .swiper-button-prev' },
+        keyboard: { enabled: true }
+      });
+    }
+  });
+</script>
+
+<style>
+/* CSS 폴백용 하트비 */
+#heart-rain{
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 9999;
+}
+#heart-rain .heart{
+  position: absolute;
+  top: -5vh;
+  will-change: transform, opacity;
+  animation-name: heartFall, heartSway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: 1, infinite;
+}
+@keyframes heartFall{
+  0%   { transform: translateY(-10vh); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+@keyframes heartSway{
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(var(--drift, 16px)); }
+  100% { transform: translateX(0); }
+}
+</style>
+{% endblock %}
+
+{% block footer_extra %}
+<div style="text-align:center; margin-top: 4px;">
+  <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
+    {{ csrf_token() if csrf_token is defined }}
+    <button class="btn btn-ghost" style="padding:6px 12px;">로그아웃</button>
+  </form>
+</div>
+{% endblock %}
+{% endblock %}

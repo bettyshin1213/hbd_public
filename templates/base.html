@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}HBD Chanwoo{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="{{ static_v('favicon-32x32.png') }}">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+  <style>
+    :root{
+      --bg:#0b0c10;--panel:rgba(255,255,255,.06);--panel-border:rgba(255,255,255,.12);
+      --text:#f7f7f8;--muted:#b6b8c0;--primary:#ff4d8d;--primary-2:#7c4dff;
+      --radius:14px;--shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{--bg:#f7f8fb;--panel:rgba(255,255,255,.9);--panel-border:rgba(15,23,42,.06);
+      --text:#14161a;--muted:#5b616e;--shadow:0 8px 24px rgba(15,23,42,.08);}
+    }
+
+    /* ====== 핵심 패치: 뷰포트 높이 보장 ====== */
+    html, body{
+      cursor: none !important; /* 커서 숨김 */
+      min-height: 100vh;
+      width: 100%;
+      margin: 0;
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(255,77,141,.12), transparent 60%),
+        radial-gradient(1200px 800px at 120% 20%, rgba(76,201,240,.12), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body{
+      position: relative;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* 커스텀 마우스 커서 div 스타일 */
+    #custom-cursor {
+      position: fixed;
+      left: 0; top: 0;
+      width: 60px; height: 60px;              /* 이미지 크기 */
+      background-image: url("{{ static_v('face1_masked.png') }}");
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 2147483647;
+      opacity: 0;                              /* 처음에는 숨김 */
+      will-change: transform, opacity;
+      transition: opacity .06s ease;           /* ← transform 트랜지션 제거(지연 없앰) */
+    }
+
+    .container{max-width:1080px;margin:0 auto;padding:14px 20px;}
+    main.container{padding-top:18px;padding-bottom:28px;}
+
+    .section{padding:32px 0;}
+    .section h2{
+      font-size:1.35rem;font-weight:800;letter-spacing:-.2px;margin:0 0 12px 0;
+      background:linear-gradient(90deg,var(--primary),#4dd0e1);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .muted{color:var(--muted);font-size:.92rem;}
+    .card{background:var(--panel);border:1px solid var(--panel-border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
+
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:50;height:60px;backdrop-filter:blur(10px) saturate(120%);
+      background:linear-gradient(to right,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border-bottom:1px solid var(--panel-border);
+    }
+    header .container{max-width:1080px;margin:0 auto;padding:0 8px;}
+    .navbar{height:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;}
+    .brand{display:inline-flex;align-items:center;font-weight:800;letter-spacing:-.2px;font-size:18px;line-height:1;text-decoration:none;color:var(--text);white-space:nowrap;transition:transform .16s,color .16s;}
+    .brand:hover{transform:translateY(-1px);color:#4dd0e1;}
+    .nav-actions{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;}
+    .btn{--_bg:linear-gradient(135deg,var(--primary),var(--primary-2));display:inline-flex;align-items:center;justify-content:center;gap:8px;height:28px;padding:0 8px;border-radius:6px;border:1px solid transparent;background:var(--_bg);color:#fff;font-weight:700;font-size:13px;letter-spacing:.2px;line-height:1.2;box-shadow:0 6px 18px rgba(255,77,141,.25);cursor:pointer;text-decoration:none;white-space:nowrap;transition:transform .16s,box-shadow .16s,filter .16s;}
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 10px 26px rgba(124,77,255,.28);}
+    .btn:active{transform:translateY(0);filter:brightness(.98);}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--panel-border);box-shadow:none;}
+    .btn-outline{background:transparent;color:var(--primary);border:1px solid rgba(255,77,141,.5);box-shadow:none;}
+    .nav-actions form{display:inline;}
+
+    /* Mobile 2-row header */
+    @media (max-width:560px){
+      .navbar{display:grid;grid-template-columns:1fr auto;grid-auto-rows:auto;column-gap:10px;row-gap:6px;align-content:center;align-items:center;padding:6px 12px;}
+      .brand{font-size:16px;}
+      .navbar.is-guest{grid-template-areas:"brand action-top";}
+      .navbar.is-logged-in{grid-template-areas:"brand action-top" "brand action-bottom";min-height:72px;}
+      .brand{grid-area:brand;align-self:center;justify-self:start;}
+      .nav-actions{display:contents;}
+      .action-top{grid-area:action-top;justify-self:end;margin:0!important;}
+      .action-bottom{grid-area:action-bottom;justify-self:end;margin:0!important;}
+      .navbar.is-guest .action-bottom{display:none;}
+      .btn{height:26px;padding:0 6px;font-size:12px;}
+    }
+    @media (max-width:360px){.brand{font-size:15px}.btn{font-size:12px}}
+
+    .anon-form{display:flex;flex-direction:column;gap:8px;}
+    .form-input,.form-textarea{width:100%;box-sizing:border-box;font-size:14px;padding:8px;border:1px solid #ccc;border-radius:6px;}
+    .form-textarea{resize:vertical;min-height:80px;}
+  </style>
+
+  <!-- Twemoji -->
+  <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <header>
+    <div class="container navbar {{ 'is-logged-in' if g.is_birthday else 'is-guest' }}">
+      <a href="{{ url_for('index') }}" class="brand">🎂 Happy 24th Birthday!</a>
+      {% if g.is_birthday %}
+        <a class="btn" href="{{ url_for('letter_view') }}">Letter from developer</a>
+      {% else %}
+        <a class="btn" href="{{ url_for('login') }}">생일자 로그인</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="container muted">© bettyshin1213</div>
+  </footer>
+
+  {% block body_extra %}{% endblock %}
+
+  <!-- ✅ Toast Root -->
+  <div id="toast-root" aria-live="polite" aria-atomic="true"
+       style="position:fixed; inset:auto 0 20px 0; display:flex; justify-content:center; z-index:99999; pointer-events:none;">
+  </div>
+
+  <style>
+    .toast{
+      min-width:220px;max-width:92vw;padding:10px 14px;margin-top:8px;border-radius:10px;
+      background:rgba(30,30,36,.96);color:#fff;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);
+      transform:translateY(20px);opacity:0;transition:transform .22s ease, opacity .22s ease;pointer-events:auto;
+      display:flex;justify-content:center;align-items:center;text-align:center;
+    }
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{background:linear-gradient(135deg,#1f8a70,#2c3e50);}
+    .toast.error{background:linear-gradient(135deg,#c0392b,#8e44ad);}
+  </style>
+
+  <script>
+    // ✅ 전역 토스트
+    window.showToast = function (msg, type='success', ms=2200){
+      const root = document.getElementById('toast-root');
+      if (!root) return alert(msg);
+      const el = document.createElement('div');
+      el.className = 'toast ' + (type === 'error' ? 'error' : 'success');
+      el.innerHTML = `<span>${msg}</span>`;
+      root.appendChild(el);
+      requestAnimationFrame(()=> el.classList.add('show'));
+      const remove = ()=>{ el.classList.remove('show'); setTimeout(()=> el.remove(), 240); };
+      setTimeout(remove, ms);
+    };
+  </script>
+
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+  <script>
+    (function(){
+      const items = {{ msgs|tojson }};
+      if (Array.isArray(items)) {
+        items.forEach(([cat, msg]) => window.showToast(msg, cat === 'error' ? 'error' : 'success'));
+      }
+    })();
+  </script>
+  {% endwith %}
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const err = params.get('error');
+      if (!err) return;
+      const msg = (err === 'unauthorized')
+        ? '접근 권한이 없습니다. 생일자 계정으로 로그인하세요.'
+        : err;
+      if (window.showToast) showToast(msg, 'error'); else alert(msg);
+    })();
+  </script>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      if (window.twemoji) {
+        twemoji.parse(document.body, {
+          base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/',
+          folder: 'svg',
+          ext: '.svg',
+          className: 'emoji'
+        });
+      }
+    });
+  </script>
+
+  <!-- ✅ PIN 입력 모달 -->
+  <div id="pin-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4);
+       align-items:center; justify-content:center; z-index:100000;">
+    <div style="background:#fff; color:#111; padding:20px; border-radius:10px; max-width:280px; width:100%;">
+      <h3 style="margin:0 0 10px 0; font-size:16px;">비밀번호 입력</h3>
+      <input id="pin-input" type="password" maxlength="4" inputmode="numeric" pattern="\d{4}"
+             style="width:100%; padding:8px; border:1px solid #ccc; border-radius:6px;" placeholder="숫자 4자리">
+      <div style="margin-top:12px; display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" onclick="closePinModal()" class="btn btn-ghost">취소</button>
+        <button type="button" onclick="submitPinModal()" class="btn">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      let pinResolve = null;
+      window.askPinModal = function(){
+        return new Promise(resolve=>{
+          pinResolve = resolve;
+          const modal = document.getElementById('pin-modal');
+          const input = document.getElementById('pin-input');
+          modal.style.display = 'flex';
+          input.value = '';
+          setTimeout(()=> input.focus(), 0);
+        });
+      };
+      window.closePinModal = function(){
+        const modal = document.getElementById('pin-modal');
+        modal.style.display = 'none';
+        if (pinResolve) pinResolve(null);
+        pinResolve = null;
+      };
+      window.submitPinModal = function(){
+        const modal = document.getElementById('pin-modal');
+        const input = document.getElementById('pin-input');
+        const val = (input.value || '').trim();
+        if(!/^\d{4}$/.test(val)){
+          showToast('숫자 4자리를 입력하세요','error');
+          return;
+        }
+        modal.style.display = 'none';
+        if (pinResolve) pinResolve(val);
+        pinResolve = null;
+      };
+    })();
+  </script>
+
+  <!-- 이모지 정렬 보정 -->
+  <style>
+    img.emoji{height:1em;width:1em;margin:0 .06em;vertical-align:-0.12em;}
+    .brand img.emoji,.btn img.emoji{height:1.05em;width:1.05em;vertical-align:-0.10em;}
+    .section h2 img.emoji{height:1.2em;width:1.2em;vertical-align:-0.18em;}
+  </style>
+
+  <!-- canvas-confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+
+  <!-- === 커스텀 커서(최소 변경 버전) === -->
+  <script>
+    (function(){
+      const SIZE = 60;               // ✅ CSS와 맞춤 (기존 50 → 80)
+      const HS   = SIZE / 2;         // 핫스팟
+      const LERP = 1.0;              // ✅ 즉시 반응(느리면 0.6~0.8)
+      const PRESS_HOLD_MS = 200;     // 눌림 유지 시간(조금 더 산뜻하게)
+      const HIDE_AFTER_UP = 550;     // 업 후 페이드아웃까지
+
+      const upSrc   = "{{static_v('face1_masked.png')}}";
+      const downSrc = "{{static_v('face2_masked.png')}}";
+      (new Image()).src = upSrc; (new Image()).src = downSrc;
+
+      let el = document.getElementById('custom-cursor');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'custom-cursor';
+        document.body.appendChild(el);
+      }
+
+      // 꼭 필요한 기본값만 세팅 (transform 트랜지션 제거)
+      el.style.position = 'fixed';
+      el.style.left = '0';
+      el.style.top = '0';
+      el.style.width = SIZE + 'px';
+      el.style.height = SIZE + 'px';
+      el.style.pointerEvents = 'none';
+      el.style.zIndex = '2147483647';
+      el.style.opacity = el.style.opacity || '0';
+      el.style.transition = 'opacity .06s ease';  // ✅ transform transition 제거
+      el.style.willChange = 'transform, opacity';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.backgroundSize = 'contain';
+      el.style.backgroundImage = `url('${upSrc}')`;
+
+      let tx = -9999, ty = -9999;  // 목표 좌표
+      let x = -9999, y = -9999;    // 렌더 좌표
+      let visible = false;
+      let hideTimer = null;
+      let pressTimer = null;
+      let pressed = false;
+
+      function render(){
+        x += (tx - x) * LERP;
+        y += (ty - y) * LERP;
+        el.style.transform = `translate3d(${x - HS}px, ${y - HS}px, 0)`;
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+
+      function show(){
+        if (!visible){ el.style.opacity = '1'; visible = true; }
+      }
+      function hideSoon(ms = HIDE_AFTER_UP){
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(()=>{ el.style.opacity = '0'; visible = false; }, ms);
+      }
+      function setPressed(isDown){
+        if (isDown === pressed) return;
+        pressed = isDown;
+        el.style.backgroundImage = `url('${isDown ? downSrc : upSrc}')`;
+      }
+
+      function moveToClient(cx, cy){
+        // ✅ 처음 보일 때 즉시 위치 고정(번쩍/튀는 현상 방지)
+        if (!visible){ x = cx; y = cy; }
+        tx = cx; ty = cy;
+        show();
+      }
+
+      function onAnyDown(cx, cy){
+        clearTimeout(pressTimer);
+        moveToClient(cx, cy);
+        setPressed(true);
+      }
+      function onAnyMove(cx, cy){
+        moveToClient(cx, cy);
+      }
+      function onAnyUp(){
+        clearTimeout(pressTimer);
+        pressTimer = setTimeout(()=> setPressed(false), PRESS_HOLD_MS);
+        hideSoon(HIDE_AFTER_UP);
+      }
+
+      const onPointerMove = (e)=> onAnyMove(e.clientX, e.clientY);
+      const onPointerDown = (e)=> onAnyDown(e.clientX, e.clientY);
+      const onPointerUp   = ()=> onAnyUp();
+
+      if (window.PointerEvent){
+        document.addEventListener('pointermove', onPointerMove, {passive:true});
+        document.addEventListener('pointerrawupdate', onPointerMove, {passive:true});
+        document.addEventListener('pointerdown', onPointerDown, {passive:true});
+        document.addEventListener('pointerup',   onPointerUp,   {passive:true});
+        document.addEventListener('pointercancel', onPointerUp, {passive:true});
+      } else {
+        document.addEventListener('touchstart', (e)=>{
+          const t = e.touches && e.touches[0]; if (!t) return;
+          onAnyDown(t.clientX, t.clientY);
+        }, {passive:true});
+        document.addEventListener('touchmove', (e)=>{
+          const t = e.touches && e.touches[0]; if (!t) return;
+          onAnyMove(t.clientX, t.clientY);
+        }, {passive:true});
+        document.addEventListener('touchend', onAnyUp, {passive:true});
+        document.addEventListener('touchcancel', onAnyUp, {passive:true});
+      }
+
+      // 클릭만 들어오는 희귀 케이스 보강
+      document.addEventListener('click', (e)=>{
+        onAnyDown(e.clientX, e.clientY);
+        onAnyUp();
+      }, {passive:true});
+
+      document.addEventListener('visibilitychange', ()=>{
+        if (!document.hidden) { show(); hideSoon(800); }
+      });
+    })();
+  </script>
+
+  <script>
+    window.CSRF = "{{ csrf_token() if csrf_token is defined }}";
+  </script>
+
+  <!-- 커서 DOM -->
+  <div id="custom-cursor" aria-hidden="true"></div>
+</body>
+</html>
