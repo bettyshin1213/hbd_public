@@ -9,16 +9,16 @@
 ## ✨ What’s inside
 
 - **Main Page**
-  - 🎥 *Video letter from FAKER* (AI-generated with Applio & Wav2Lip)
-  - 🪖 Photo **slideshow**
-  - 💌 Birthday owner’s personal **message**
-  - 📝 **Guestbook** (anonymous posts allowed)
+  - 🎥 Video letter from FAKER (AI-generated with Applio & Wav2Lip)
+  - 🪖 Photo slideshow
+  - 💌 Birthday owner’s personal message
+  - 📝 Guestbook (anonymous posts allowed)
 - **Letter Page**
   - 💌 A personal letter from the developer to the birthday owner
 - **Countdowns**
   - ⏳ **Birthday**: Days / Hours / Minutes / Seconds
   - 🎖 **Discharge**: Years / Months / Days + progress bar
-
+  - 
 ---
 
 ## 🔐 Birthday Owner perks
@@ -29,9 +29,9 @@ Login with a password to unlock owner-only features:
 - 📸 Manage photos  
   - Upload
   - Delete selected
-  - **Reset** to original set
+  - Reset to original set
 - 🗑 Remove guestbook entries  
-- 💌 Open the **private letter** page
+- 💌 Open the private letter page
 
 > The public cannot see the Letter page and cannot delete messages/photos.
 
@@ -65,10 +65,11 @@ sh run_local.sh
 - **Server**: Nginx (HTTPS) + Gunicorn (WSGI)  
 - **Infra**: Naver Cloud Platform (VPC, NAT Gateway, Route Tables, VM Instances)  
 - **Container**: Docker (App Server runtime)  
-- **AI Media**: Applio (Voice Conversion) + Wav2Lip (lip-sync video for Faker message) with L4 GPU
+- **AI Video**: Applio (Voice Conversion) + Wav2Lip (lip-sync video for Faker message) with L4 GPU
 
 ---
 
 ## 👩‍💻 Architecture Diagram
 
 <img width="847" height="765" alt="image" src="https://github.com/user-attachments/assets/07cbaadd-19b1-4a62-8569-745ca80295be" />
+
