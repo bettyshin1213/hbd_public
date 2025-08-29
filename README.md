@@ -18,7 +18,8 @@
 - **Countdowns**
   - ⏳ **Birthday**: Days / Hours / Minutes / Seconds
   - 🎖 **Discharge**: Years / Months / Days + progress bar
-  - 
+
+
 ---
 
 ## 🔐 Birthday Owner perks
@@ -34,6 +35,7 @@ Login with a password to unlock owner-only features:
 - 💌 Open the private letter page
 
 > The public cannot see the Letter page and cannot delete messages/photos.
+
 
 ---
 
@@ -55,6 +57,7 @@ For macOS/Linux,
 sh run_local.sh
 ```
 
+
 ---
 
 ## 🛠 Tech Stack
@@ -72,4 +75,5 @@ sh run_local.sh
 ## 👩‍💻 Architecture Diagram
 
 <img width="847" height="765" alt="image" src="https://github.com/user-attachments/assets/07cbaadd-19b1-4a62-8569-745ca80295be" />
+
 
